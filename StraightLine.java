@@ -22,9 +22,9 @@ public class MasoudaAuto2 extends LinearOpMode {
       waitForStart();
       
       while (opModeIsActive()){
-         frontLeft.setPower(0.7);
+         frontLeft.setPower(-0.7);
          frontRight.setPower(0.7);
-         backLeft.setPower(0.7);
+         backLeft.setPower(-0.7);
          backRight.setPower(0.7);
           sleep(1000);
       }

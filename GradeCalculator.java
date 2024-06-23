@@ -1,7 +1,7 @@
 // Online Java Compiler
 // Use this editor to write, compile and run your Java code online
 import java.util.Scanner;
-class HelloWorld {
+class GradeCalculator {
     public static void main(String[] args) {
         System.out.println("Welcome to the GradeWhiz! Calculate your average instantly.");
         //Prompt for user to enter their grades for three subjects

@@ -1,0 +1,35 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import java.util.Locale;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp
+
+public class MKS extends LinearOpMode {
+
+public void runOpMode() {
+
+DistanceSensor distance = hardwareMap.get(DistanceSensor.class, "distance");
+ColorSensor sensor_color = hardwareMap.get(ColorSensor.class, "sensor_color");
+TouchSensor testTouch = hardwareMap.get(TouchSensor.class, "testTouch");
+waitForStart();
+
+while (opModeIsActive()) {
+telemetry.addData("Status", "Running");
+telemetry.addData("Distance", distance.getDistance(DistanceUnit.CM));
+telemetry.addData ("Red: ", sensor_color.red());
+telemetry.addData ("Green: ", sensor_color.green());
+telemetry.addData ("Blue: ", sensor_color.blue());
+telemetry.addData("Touch", testTouch.isPressed());
+telemetry.update();
+}
+}
+} 

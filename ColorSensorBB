@@ -1,0 +1,53 @@
+ package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@Autonomous
+public class MasoudaCD extends LinearOpMode {
+
+ColorSensor sensorColor;
+DistanceSensor sensorDistance; 
+TouchSensor touch; 
+DcMotor frontRight; 
+
+@Override
+public void runOpMode() {
+    
+ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "ldist");
+
+//DistanceSensor sensorDistance = hardwareMap.get(DistanceSensor.class, "distance");
+//TouchSensor touch = hardwareMap.get(TouchSensor.class, "elevatorLimit");
+//DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+
+waitForStart();
+
+if(opModeIsActive()) {
+    
+while (opModeIsActive()) {
+    while (true) {
+telemetry.addData ("Red: ", sensorColor.red());
+telemetry.addData ("Green: ", sensorColor.green());
+telemetry.addData ("Blue: ", sensorColor.blue());
+telemetry.update(); 
+
+//Green Hex = rgb green > 1000
+//Purple Hex = rgb blue > 3000
+}
+}
+}
+}
+}

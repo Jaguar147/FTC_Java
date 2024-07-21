@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous
 
 public class MasoudaAuto2 extends LinearOpMode {
-    DcMotor motor1;
-    DcMotor motor2;
-
-
+    DcMotor frontLeft ;
+    DcMotor frontRight ;
+    DcMotor backLeft ;
+    DcMotor backRight ;
 
     public void runOpMode() {
       frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");

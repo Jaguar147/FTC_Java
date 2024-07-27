@@ -1,0 +1,16 @@
+ boolean ask = true;
+    
+    while (ask == true) {
+        System.out.print("What is your age: ");
+        Scanner age = new Scanner (System.in);
+        int a = age.nextInt();
+        
+        if (a==0) {
+            ask = false;
+        }
+        else if (a > 18) {
+        System.out.println("Pick a movie:");
+        }
+     else {
+        System.out.println("You can only watch a kids movie.");
+     }

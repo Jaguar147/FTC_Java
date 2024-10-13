@@ -1,0 +1,29 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+
+@TeleOp
+
+public class ARMK extends LinearOpMode {
+
+DcMotor armMotor;
+
+@Override
+    public void runOpMode() {
+        
+     armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+     
+      waitForStart();
+        while (opModeIsActive ()) {
+            float x = this.gamepad1.left_stick_x * -1 ;
+           
+        armMotor.setPower(x / 2.0);
+
+}
+
+}
+
+}

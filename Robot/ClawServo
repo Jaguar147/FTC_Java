@@ -1,0 +1,30 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+
+
+@TeleOp
+
+public class MKServoTest extends LinearOpMode{
+
+    Servo Claw;
+    
+@Override
+    public void runOpMode() {
+     
+     
+      Claw = hardwareMap.get(Servo.class, "Claw");
+
+      waitForStart();
+
+    while (opModeIsActive()) {
+
+      double s = this.gamepad1.left_stick_x; 
+
+     Claw.setPosition(s * 0.5);
+
+     }
+    }
+  }

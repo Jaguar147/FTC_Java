@@ -1,0 +1,32 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@TeleOp
+
+public class BevelTest extends LinearOpMode {
+
+@Override
+    public void runOpMode() {
+        
+     DcMotor bevel = hardwareMap.get(DcMotor.class, "left_motor");
+     
+      waitForStart();
+        while (opModeIsActive ()) {
+            float x = this.gamepad1.left_stick_x ;
+           
+        bevel.setPower(x * 0.55);
+        
+          if(gamepad1.a){
+              bevel.setPower(0.55);
+            }
+            if(gamepad1.y){
+             bevel.setPower(-0.55);
+            }
+
+
+}
+}
+}

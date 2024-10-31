@@ -1,0 +1,35 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "NewS", group = "encoder")
+public class NewS extends LinearOpMode {
+
+DcMotor lm;
+
+@Override
+    public void runOpMode() {
+        
+     lm = hardwareMap.get(DcMotor.class, "left_motor");
+     
+      waitForStart();
+        while (opModeIsActive ()) {
+            float y = this.gamepad1.left_stick_y * 1 ;
+           
+        lm.setPower(y / 4.0);
+        
+        if(gamepad1.a){
+              lm.setPower(1);
+            }
+            if(gamepad1.y){
+             lm.setPower(-1);
+            }
+            
+                    lm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+}
+
+}
+
+}

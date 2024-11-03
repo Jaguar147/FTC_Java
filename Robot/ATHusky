@@ -1,0 +1,94 @@
+//robot 1 config
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
+import java.util.concurrent.TimeUnit;
+
+@Autonomous(name = "Sensor: HuskyLens", group = "Sensor")
+
+public class AT extends LinearOpMode {
+
+    private final int READ_PERIOD = 1;
+    private HuskyLens huskyLens;
+   // DcMotor blMotor, brMotor, flMotor, frMotor; 
+   DcMotor frMotor;
+
+    @Override
+    public void runOpMode()
+    {
+         huskyLens = hardwareMap.get(HuskyLens.class, "HuskyLens");
+        /* blMotor = hardwareMap.dcMotor.get("backLeft");
+         brMotor = hardwareMap.dcMotor.get("backRight");
+         flMotor = hardwareMap.dcMotor.get("frontLeft"); */
+         frMotor = hardwareMap.dcMotor.get("frontRight");
+         
+        frMotor.setDirection(DcMotor.Direction.REVERSE);
+      //  brMotor.setDirection(DcMotor.Direction.REVERSE); 
+        
+    /*    IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);  */
+        
+        Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
+        rateLimit.expire();
+
+        if (!huskyLens.knock()) {
+            telemetry.addData(">>", "Problem communicating with " + huskyLens.getDeviceName());
+        } else {
+            telemetry.addData(">>", "Press start to continue");
+        }
+
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
+        telemetry.update();
+        waitForStart();
+
+        while(opModeIsActive()) {
+
+            
+           // double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            
+            if (!rateLimit.hasExpired()) {
+                continue;
+            }
+            rateLimit.reset();
+
+            c.Block[] blocks = huskyLens.blocks();
+            telemetry.addData("Block count", blocks.length);
+            for (int i = 0; i < blocks.length; i++) {
+                telemetry.addData("Block", blocks[i].id);
+                telemetry.addData("x: ", blocks[i].x); 
+                blocks[i].
+                telemetry.addData("y: ", blocks[i].y);
+                telemetry.update(); 
+                frMotor.setPower((blocks[i].x)/200);
+                
+                            
+         /*  if (blocks[i].id==3) {
+               
+            blMotor.setPower(blocks[i].x);
+            brMotor.setPower(0);
+            flMotor.setPower(blocks[i].x);
+            frMotor.setPower(0); 
+ 
+            } */
+
+            telemetry.update();
+                                                  }
+        }
+        
+        
+    }
+}

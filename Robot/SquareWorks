@@ -1,0 +1,178 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import java.lang.Thread;
+
+@Autonomous 
+public class Auton extends LinearOpMode {
+
+DcMotor fL;
+DcMotor fR;
+DcMotor bL;
+DcMotor bR;
+
+//private int name;
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+    @Override 
+    public void runOpMode () {
+        
+fL = hardwareMap.get(DcMotor.class, "frontLeft");
+fR = hardwareMap.get(DcMotor.class, "frontRight");
+bL = hardwareMap.get(DcMotor.class, "backLeft");
+bR = hardwareMap.get(DcMotor.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+fR.setDirection(DcMotorSimple.Direction.REVERSE);
+bR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+
+int TPR = 1120;
+double C = 3.87;
+
+//Distance in Inches
+double DI[] = new double [4];
+            DI[0] = 5; //forward
+            DI[1] = 5; //right
+            DI[2] = 5; //back
+            DI[3] = 5; //left
+            
+//Speed
+             double S[] = new double [4];
+             S[0] = 0.25; //forward
+             S[1] = 0.25; //right
+             S[2] = 0.25; //back
+             S[3] = 0.25; //left
+
+/*Distance in inches divided by circumference times ticks per rotation
+double R = ( ((DI[i])/C) * TPR )*/
+
+waitForStart(); //needs to be before while opmodeisactive
+ //  while(opModeIsActive()) {
+
+
+forwardDrive(((DI[0]/C) * TPR), S[0]) ;
+try { 
+    sleep(500); } 
+    catch(Exception r) {}
+rightDrive(((DI[1]/C) * TPR), S[1]) ;
+try { 
+    sleep(500); } 
+    catch(Exception r) {}
+backDrive(((DI[2]/C) * TPR), S[2]) ;
+try { 
+    sleep(500); } 
+    catch(Exception r) {}
+leftDrive(((DI[3]/C) * TPR), S[3]) ;    
+    
+   }
+//}
+
+private void forwardDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(fL_pos);
+fR.setTargetPosition(fR_pos);
+bL.setTargetPosition(bL_pos);
+bR.setTargetPosition(bR_pos);
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+
+
+}
+
+private void backDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(-(fL_pos));
+fR.setTargetPosition(-(fR_pos));
+bL.setTargetPosition(-(bL_pos));
+bR.setTargetPosition(-(bR_pos));
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+
+}
+
+private void rightDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(fL_pos);
+fR.setTargetPosition(-(fR_pos));
+bL.setTargetPosition(-(bL_pos));
+bR.setTargetPosition(bR_pos);
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+}
+
+private void leftDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(-(fL_pos));
+fR.setTargetPosition(fR_pos);
+bL.setTargetPosition(bL_pos);
+bR.setTargetPosition(-(bR_pos));
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+
+telemetry.addData("Target Pos", fL.getTargetPosition());
+    telemetry.update(); 
+}
+}

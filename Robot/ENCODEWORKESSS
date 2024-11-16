@@ -1,0 +1,74 @@
+package org.firstinspires.ftc.teamcode.Masouda;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous
+public class SqMK extends LinearOpMode{
+
+DcMotor fL;
+DcMotor fR;
+DcMotor bL;
+DcMotor bR;
+
+    @Override 
+    public void runOpMode () {
+fL = hardwareMap.get(DcMotor.class, "frontLeft");
+fR = hardwareMap.get(DcMotor.class, "frontRight");
+bL = hardwareMap.get(DcMotor.class, "backLeft");
+bR = hardwareMap.get(DcMotor.class, "backRight");
+
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+ 
+       // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
+        fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+       
+waitForStart();
+         telemetry.addData("frontLeft Encoder Position", fL.getCurrentPosition());
+Drive(400, 400, 400, 400, 0.5) ;
+
+//Drive(400, -400, -400, 400, 0.5) ;
+//Drive(-400, -400, -400, -400, 0.5) ;
+//Drive(-400, 400, 400, -400, 0.5) ;
+
+
+//1 rotation = 350 ticks?
+}
+
+private void Drive(int fLtarget, int fRtarget, int bLtarget, int bRtarget, double speed) {
+
+
+fL.setTargetPosition(fLtarget);
+fR.setTargetPosition(fRtarget);
+bL.setTargetPosition(bLtarget);
+bR.setTargetPosition(bRtarget);
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+
+while(opModeIsActive() && (fL.isBusy() || fR.isBusy()))
+{
+    // comment;
+}
+ telemetry.addData("frontLeft Encoder Position", fL.getCurrentPosition());
+  fL.setPower(0);
+  fR.setPower(0);
+  bL.setPower(0);
+  bR.setPower(0);
+   telemetry.addData("frontLeft Encoder Position", fL.getCurrentPosition());
+}
+}

@@ -1,0 +1,192 @@
+//Imports go here
+
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous (name = "NOVFIFT")
+public class EncodeAutoMK extends LinearOpMode {
+
+//private DcMotor name;
+DcMotor fL;
+DcMotor fR;
+DcMotor bL;
+DcMotor bR;
+
+//private int name;
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+    @Override 
+    public void runOpMode () {
+        
+fL = hardwareMap.get(DcMotor.class, "frontLeft");
+fR = hardwareMap.get(DcMotor.class, "frontRight");
+bL = hardwareMap.get(DcMotor.class, "backLeft");
+bR = hardwareMap.get(DcMotor.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//may change based on how wheels turn
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+
+double C = 3.78;
+
+
+/*Distance in inches divided by circumference times ticks per rotation
+double R = ( ((DI[i])/C) * TPR )*/
+
+
+waitForStart();
+    
+    int TPR = 350;
+
+//hopefully moves in a square
+
+forwardDrive(TPR, 0.3) ; 
+rightDrive(TPR, 0.3) ; 
+backDrive(TPR, 0.3) ; 
+leftDrive(TPR, 0.3) ; 
+
+    }
+
+private void forwardDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(fL_pos);
+fR.setTargetPosition(fR_pos);
+bL.setTargetPosition(bL_pos);
+bR.setTargetPosition(bR_pos);
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+while(opModeIsActive() && (fL.isBusy() || fR.isBusy()))
+{
+    // comment;
+}
+  fL.setPower(0);
+  fR.setPower(0);
+  bL.setPower(0);
+  bR.setPower(0);
+}
+
+
+
+private void backDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(-(fL_pos));
+fR.setTargetPosition(-(fR_pos));
+bL.setTargetPosition(-(bL_pos));
+bR.setTargetPosition(-(bR_pos));
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+while(opModeIsActive() && (fL.isBusy() || fR.isBusy()))
+{
+    // comment;
+}
+  fL.setPower(0);
+  fR.setPower(0);
+  bL.setPower(0);
+  bR.setPower(0);
+}
+
+
+
+private void rightDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(fL_pos);
+fR.setTargetPosition(-(fR_pos));
+bL.setTargetPosition(-(bL_pos));
+bR.setTargetPosition(bR_pos);
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+while(opModeIsActive() && (fL.isBusy() || fR.isBusy()))
+{
+    // comment;
+}
+  fL.setPower(0);
+  fR.setPower(0);
+  bL.setPower(0);
+  bR.setPower(0);
+}
+
+
+
+private void leftDrive(double target, double speed) {
+fL_pos += target;
+fR_pos += target;
+bL_pos += target;
+bR_pos += target;
+
+fL.setTargetPosition(-(fL_pos));
+fR.setTargetPosition(fR_pos);
+bL.setTargetPosition(bL_pos);
+bR.setTargetPosition(-(bR_pos));
+
+fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+fL.setPower(speed);
+fR.setPower(speed);
+bL.setPower(speed);
+bR.setPower(speed);
+
+ while(opModeIsActive() && (fL.isBusy() || fR.isBusy()))
+{
+    // comment;
+}
+  fL.setPower(0);
+  fR.setPower(0);
+  bL.setPower(0);
+  bR.setPower(0);
+}
+}

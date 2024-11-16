@@ -1,0 +1,143 @@
+//Imports go here
+
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous (name = "AgainMK")
+public class WMethods extends LinearOpMode {
+
+//private DcMotor name;
+DcMotor fL;
+DcMotor fR;
+DcMotor bL;
+DcMotor bR;
+
+//private int name;
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+    @Override 
+    public void runOpMode () {
+        
+fL = hardwareMap.get(DcMotor.class, "frontLeft");
+fR = hardwareMap.get(DcMotor.class, "frontRight");
+bL = hardwareMap.get(DcMotor.class, "backLeft");
+bR = hardwareMap.get(DcMotor.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//may change based on how wheels turn
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+waitForStart();
+
+   // Move in a square
+
+    double speed = 0.5;
+
+        forwardDrive(25, speed);
+        rightDrive(25, speed);
+        backDrive(25, speed);
+        leftDrive(25, speed);
+
+}
+
+
+   private int calculateTicks (int distanceToMove) {
+
+        int TPR = 1120;
+        double gearRatio = 0.427;
+        double circumference = 3.78;
+
+    	double motorTicksPerRotation = (TPR * gearRatio);
+        double ticksPerInch = motorTicksPerRotation / circumference ;
+	
+    //double Inches  = (inches/circumference);
+	//double ticks = (oneRations * newInches);
+
+        double ticksDistance = ticksPerInch * distanceToMove;
+        int targetPosition = (int)ticksDistance;
+        return targetPosition ;
+
+//double Target = (inches/Circumference) * CPR
+       
+    }
+    
+    private void newTarget(int inches1, int inches2,int inches3,int inches4)
+    {
+        int fL_target = calculateTicks(inches1);
+        int fR_target = calculateTicks(inches2);
+        int bL_target = calculateTicks(inches3);
+        int bR_target = calculateTicks(inches4);
+         
+        fL.setTargetPosition(fL_pos + fL_target);
+        fR.setTargetPosition(fR_pos + fR_target);
+        bL.setTargetPosition(bL_pos + bL_target);
+        bR.setTargetPosition(bR_pos + bR_target);
+
+        // Update the positions for the next move
+        fL_pos += fL_target;
+        fR_pos += fR_target;
+        bL_pos += bL_target;
+        bR_pos += bR_target;
+    }
+
+  private void forwardDrive(int inches, double speed) {
+        newTarget(inches, inches, inches, inches);
+        moveToPosition(speed);
+    }
+
+  private void rightDrive(int inches, double speed) {
+        newTarget(inches, -inches, -inches, inches);
+        moveToPosition(speed);
+    }
+
+  private void leftDrive(int inches, double speed) {
+        newTarget(-inches, inches, inches, -inches);
+        moveToPosition(speed);
+    }
+
+  private void backDrive (int inches, double speed) {
+        newTarget(-inches, -inches, -inches, -inches);
+        moveToPosition(speed);
+    }
+
+
+  private void moveToPosition ( double speed) {
+
+
+        // Set motor modes to RUN_TO_POSITION
+        fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fL.setPower(speed);
+        fR.setPower(speed);
+        bL.setPower(speed);
+        bR.setPower(speed);
+
+        // Wait for motors to reach the target positions
+        while (opModeIsActive() && (fL.isBusy() || fR.isBusy() || bL.isBusy() || bR.isBusy())) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        // Stop motors once target is reached
+        fL.setPower(0);
+        fR.setPower(0);
+        bL.setPower(0);
+        bR.setPower(0);
+    }
+}

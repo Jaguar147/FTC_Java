@@ -1,0 +1,133 @@
+//Imports go here
+
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous (name = "MK")
+public class NovSeventeen extends LinearOpMode {
+
+//private DcMotor name;
+DcMotor fL;
+DcMotor fR;
+DcMotor bL;
+DcMotor bR;
+
+//private int name;
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+    @Override 
+    public void runOpMode () {
+        
+fL = hardwareMap.get(DcMotor.class, "frontLeft");
+fR = hardwareMap.get(DcMotor.class, "frontRight");
+bL = hardwareMap.get(DcMotor.class, "backLeft");
+bR = hardwareMap.get(DcMotor.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//may change based on how wheels turn
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+waitForStart();
+
+//Put code for moving here
+
+//Should move forward 10 inches
+
+forwardDrive(12, 0.35);
+rightDrive(12,0.35);
+forwardDrive(45, 0.35);
+rightDrive(11,0.35); 
+backDrive (53,0.35);
+forwardDrive(55, 0.35);
+rightDrive(10,0.35);
+backDrive (55,0.35);
+
+
+}
+
+ 
+//This is the method we will call inside each of the drives
+ private void settingTarget (int fL_inches, int fR_inches, int bL_inches, int bR_inches) {
+
+    double ticksPerInch = 29.8497937569;
+    
+    int fL_target = (int)(ticksPerInch * fL_inches);
+    int  fR_target = (int)(ticksPerInch * fR_inches);
+    int bR_target = (int)(ticksPerInch * bR_inches);
+    int bL_target =  (int)(ticksPerInch * bL_inches);
+
+
+        fL.setTargetPosition(fL_pos + fL_target);
+        fR.setTargetPosition(fR_pos + fR_target);
+        bL.setTargetPosition(bL_pos + bL_target);
+        bR.setTargetPosition(bR_pos + bR_target);
+
+        // Update the positions for the next move
+        fL_pos += fL_target;
+        fR_pos += fR_target;
+        bL_pos += bL_target;
+        bR_pos += bR_target;
+
+        // Set motor modes to RUN_TO_POSITION
+        fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+  private void forwardDrive(int inches, double speed) {
+       settingTarget(inches, inches, inches, inches);
+        settingSpeed (speed);
+    }
+
+  private void rightDrive(int inches, double speed) {
+       settingTarget(inches, -inches, -inches, inches);
+        settingSpeed (speed);
+    }
+
+  private void leftDrive(int inches, double speed) {
+       settingTarget(-inches, inches, inches, -inches);
+        settingSpeed (speed);
+    }
+
+  private void backDrive(int inches, double speed) {
+       settingTarget(-inches, -inches, -inches, -inches);
+        settingSpeed (speed);
+    }
+
+
+  private void settingSpeed (double speed) {
+        fL.setPower(speed);
+        fR.setPower(speed);
+        bL.setPower(speed);
+        bR.setPower(speed);
+
+        // Wait for motors to reach the target positions
+        while (opModeIsActive() && (fL.isBusy() || fR.isBusy() || bL.isBusy() || bR.isBusy())) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        // Stop motors once target is reached
+        fL.setPower(0);
+        fR.setPower(0);
+        bL.setPower(0);
+        bR.setPower(0);
+    }
+}
+
+

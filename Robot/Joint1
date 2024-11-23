@@ -1,0 +1,82 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous 
+
+//joint 1, no stop brake mode
+
+public class JointOne extends LinearOpMode {
+
+  DcMotor joint;
+
+   int joint_pos;
+
+
+    @Override 
+    public void runOpMode () {
+        
+joint = hardwareMap.get(DcMotor.class, "shoulder");
+
+joint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+joint.setDirection(DcMotor.Direction.REVERSE);
+
+
+joint_pos = 0;
+
+waitForStart();
+
+settingJointOne(20);
+settingSpeedJ(0.5);
+
+}
+
+private void settingJointOne (int jointAngle) {
+
+//for joint 1: 5203-2402-0019 model
+// Gear ratio = 20 tooth to 100 tooth
+    
+    double motorTPR_one = 537.7;
+    double gearRatio_one = 5;
+    double jointOne = (gearRatio_one * motorTPR_one);
+    double ticksPerDegree = (jointOne / 360);
+
+    int jointTarget = (int)(ticksPerDegree * jointAngle);
+
+    //define joint_pos as zero in start
+           joint.setTargetPosition(joint_pos + jointTarget);
+         
+ joint_pos += jointTarget;
+
+            joint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+ }
+
+
+ private void settingSpeedJ (double jointSpeed) {
+        joint.setPower(jointSpeed);
+
+        // Wait for motors to reach the target positions
+        while (opModeIsActive() && joint.isBusy()) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        // Stop motors once target is reached
+        joint.setPower(0);
+         }
+}
+
+
+
+
+
+
+
+
+
+  
+
+
+
+

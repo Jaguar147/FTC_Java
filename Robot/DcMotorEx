@@ -1,0 +1,71 @@
+package org.firstinspires.ftc.teamcode.Masouda;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Autonomous
+public class VelocityAttempt extends LinearOpMode {
+     DcMotorEx fL;
+     DcMotorEx fR;
+     DcMotorEx bL;
+     DcMotorEx bR;
+     
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+     
+      @Override 
+    public void runOpMode () {
+        
+        fL = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        fR = hardwareMap.get(DcMotorEx.class, "frontRight");
+        bL = hardwareMap.get(DcMotorEx.class, "backLeft");
+        bR = hardwareMap.get(DcMotorEx.class, "backRight");
+
+        fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.REVERSE);
+        
+         fL_pos = 0;
+         fR_pos = 0;
+         bL_pos = 0;
+         bR_pos = 0;
+
+ waitForStart();
+ 
+        fL.setTargetPosition(1000);
+        fR.setTargetPosition(1000);
+        bL.setTargetPosition(1000);
+        bR.setTargetPosition(1000);
+
+        fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        fL.setVelocity(200);
+        fR.setVelocity(200);
+        bL.setVelocity(200);
+        bR.setVelocity(200);
+
+
+  while (opModeIsActive() && (fL.isBusy() || fR.isBusy() || bL.isBusy() || bR.isBusy())) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        fL.setPower(0);
+        fR.setPower(0);
+        bL.setPower(0);
+        bR.setPower(0);
+    }
+  
+        
+ }
+ 

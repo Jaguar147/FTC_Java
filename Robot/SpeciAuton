@@ -1,0 +1,337 @@
+
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+@Autonomous 
+public class FindAngles extends LinearOpMode {
+
+
+//Wheels
+     DcMotorEx fL;
+     DcMotorEx fR;
+     DcMotorEx bL;
+     DcMotorEx bR;
+
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+//Arms
+  DcMotor shoulder;
+  DcMotor elbow;
+
+   int shoulder_pos;
+   int elbow_pos;
+
+
+//Servos
+  Servo intake;
+  Servo pivot;
+
+@Override 
+    public void runOpMode () {
+
+//Hardware Map
+
+//Wheels   
+        fL = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        fR = hardwareMap.get(DcMotorEx.class, "frontRight");
+        bL = hardwareMap.get(DcMotorEx.class, "backLeft");
+        bR = hardwareMap.get(DcMotorEx.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//may change based on how wheels turn
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+
+
+//Arms
+shoulder = hardwareMap.get(DcMotor.class, "shoulder");
+shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+shoulder.setDirection(DcMotor.Direction.REVERSE);
+shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+elbow = hardwareMap.get(DcMotor.class, "elbow");
+elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+elbow.setDirection(DcMotor.Direction.REVERSE);
+elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+shoulder_pos = 0;
+elbow_pos = 0;
+
+//Servos
+intake = hardwareMap.get(Servo.class, "intake");
+pivot = hardwareMap.get(Servo.class, "wrist");
+
+/*
+Wheel Methods
+ Drives 4 Directions: forwardDrive, rightDrive, leftDrive, backDrive
+ Diagonal 4 Directions: fL_Drive, fR_Drive, bL_Drive, bR_Drive
+ Turning left/right: turnLeft, turnRight
+
+Arm Methods
+    Turn joints: shoulderTurn, elbowTurn
+
+Servo Methods:
+    turnPivot
+    runIntake */
+
+waitForStart();
+
+specimenHang (); 
+
+}
+
+//S :- 1210
+//e :- 1210
+
+// All Drive Methods
+
+ private void specimenHang () {
+
+ forwardDrive (9, 200);
+ elbowTurn(0.4);
+ shoulderTurn (0.3);
+ elbowTurn(0.3); 
+ forwardDrive(3, 500);
+ elbowTurn2(0.1);  
+ shoulderTurn2(0.5); 
+
+ 
+// runIntake(0.7);
+
+}
+
+//This is the method we will call inside each of the drives
+ private void settingTarget (int fL_inches, int fR_inches, int bL_inches, int bR_inches) {
+
+    double ticksPerInch = 29.8497937569;
+    
+    int fL_target = (int)(ticksPerInch * fL_inches);
+    int fR_target = (int)(ticksPerInch * fR_inches);
+    int bR_target = (int)(ticksPerInch * bR_inches);
+    int bL_target =  (int)(ticksPerInch * bL_inches);
+
+
+        fL.setTargetPosition(fL_pos + fL_target);
+        fR.setTargetPosition(fR_pos + fR_target);
+        bL.setTargetPosition(bL_pos + bL_target);
+        bR.setTargetPosition(bR_pos + bR_target);
+
+        // Update the positions for the next move
+        fL_pos += fL_target;
+        fR_pos += fR_target;
+        bL_pos += bL_target;
+        bR_pos += bR_target;
+
+        // Set motor modes to RUN_TO_POSITION
+        fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+// Drive 4 directions
+
+  private void forwardDrive(int inches, double velocity) {
+       settingTarget(inches, inches, inches, inches);
+        settingVelocity (velocity);
+    }
+
+  private void rightDrive(int inches, double velocity) {
+       settingTarget(inches, -inches, -inches, inches);
+        settingVelocity (velocity);
+    }
+
+  private void leftDrive(int inches, double velocity) {
+       settingTarget(-inches, inches, inches, -inches);
+        settingVelocity (velocity);
+    }
+
+  private void backDrive(int inches, double velocity) {
+       settingTarget(-inches, -inches, -inches, -inches);
+        settingVelocity (velocity);
+    }
+
+// Diagonal Movements 4
+
+  private void fL_Drive (int inches, double velocity) {
+       settingTarget(0, inches, inches, 0);
+        settingVelocity (velocity);
+    }
+
+
+  private void fR_Drive (int inches, double velocity) {
+       settingTarget(inches, 0, 0, inches);
+        settingVelocity (velocity);
+    }
+
+
+  private void bL_Drive (int inches, double velocity) {
+       settingTarget(-inches, 0, 0, -inches);
+        settingVelocity (velocity);
+    }
+
+  private void bR_Drive (int inches, double velocity) {
+       settingTarget(0, -inches, -inches, 0);
+        settingVelocity (velocity);
+    }
+
+
+// Turn Left/Right
+
+  private void turnLeft (int inches, double velocity) {
+       settingTarget(-inches, inches, -inches, inches);
+        settingVelocity (velocity);
+    }
+
+
+  private void turnRight (int inches, double velocity) {
+       settingTarget(inches, -inches, inches, -inches);
+        settingVelocity (velocity);
+    }
+
+
+  private void settingVelocity (double velocity) {
+        fL.setVelocity(velocity);
+        fR.setVelocity(velocity);
+        bL.setVelocity(velocity);
+        bR.setVelocity(velocity);
+
+        // Wait for motors to reach the target positions
+        while (opModeIsActive() && (fL.isBusy() || fR.isBusy() || bL.isBusy() || bR.isBusy())) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        // Stop motors once target is reached
+        fL.setPower(0);
+        fR.setPower(0);
+        bL.setPower(0);
+        bR.setPower(0);
+    }
+
+
+// All Arm Methods
+
+//Shoulder Method
+
+
+private void shoulderTurn (double shoulderSpeed) {
+
+    int shoulderTarget = (1220);
+
+    //define shoulder_pos as zero in start
+           shoulder.setTargetPosition(shoulder_pos + shoulderTarget);
+         
+           shoulder_pos += shoulderTarget;
+
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            
+            shoulder.setPower(shoulderSpeed);
+            
+  while (opModeIsActive() && shoulder.isBusy()) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+ }
+ 
+ private void shoulderTurn2 (double shoulderSpeed) {
+
+    int shoulderTarget = (-200);
+
+    //define shoulder_pos as zero in start
+           shoulder.setTargetPosition(shoulder_pos + shoulderTarget);
+         
+           shoulder_pos += shoulderTarget;
+
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            
+            shoulder.setPower(shoulderSpeed);
+            
+  while (opModeIsActive() && shoulder.isBusy()) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+ }
+
+
+
+//Elbow Method
+
+private void elbowTurn (double elbowSpeed) {
+
+    int elbowTarget = (1280/2);
+
+    //define elbow_pos as zero in start
+           elbow.setTargetPosition(elbow_pos + elbowTarget);
+         
+           elbow_pos += elbowTarget;
+
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             
+           elbow.setPower(elbowSpeed);
+             
+    
+        while (opModeIsActive() && elbow.isBusy()) {
+            // You can add telemetry here if needed to monitor progress
+        }
+ }
+ 
+ private void elbowTurn2 (double elbowSpeed) {
+
+    int elbowTarget = (-300);
+
+    //define elbow_pos as zero in start
+           elbow.setTargetPosition(elbow_pos + elbowTarget);
+         
+           elbow_pos += elbowTarget;
+
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             
+           elbow.setPower(elbowSpeed);
+             
+    
+        while (opModeIsActive() && elbow.isBusy()) {
+            // You can add telemetry here if needed to monitor progress
+        }
+ }
+
+
+
+
+// All Servo Methods
+
+private void runIntake (double intakePos) {
+
+     intake.setPosition(intakePos);
+}
+
+
+private void turnWrist (double pivotPos) {
+
+    pivot.setPosition(pivotPos);
+    
+}
+
+}
+
+
+
+
+
+

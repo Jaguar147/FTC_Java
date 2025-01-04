@@ -1,0 +1,257 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+@Autonomous 
+public class ARev2 extends LinearOpMode {
+
+
+//Wheels
+     DcMotorEx fL;
+     DcMotorEx fR;
+     DcMotorEx bL;
+     DcMotorEx bR;
+
+    int fL_pos;
+    int fR_pos;
+    int bL_pos;
+    int bR_pos;
+
+//Arms
+  DcMotor shoulder;
+  DcMotor elbow;
+
+   int shoulder_pos;
+   int elbow_pos;
+
+
+//Servos
+  Servo intake;
+  Servo wrist;
+
+@Override 
+    public void runOpMode () {
+
+//Hardware Map
+
+//Wheels   
+        fL = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        fR = hardwareMap.get(DcMotorEx.class, "frontRight");
+        bL = hardwareMap.get(DcMotorEx.class, "backLeft");
+        bR = hardwareMap.get(DcMotorEx.class, "backRight");
+
+fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//may change based on how wheels turn
+fR.setDirection(DcMotor.Direction.REVERSE);
+bR.setDirection(DcMotor.Direction.REVERSE);
+
+    fL_pos = 0;
+    fR_pos = 0;
+    bL_pos = 0;
+    bR_pos = 0;
+
+
+//Arms
+shoulder = hardwareMap.get(DcMotor.class, "shoulder");
+shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+shoulder.setDirection(DcMotor.Direction.REVERSE);
+shoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+elbow = hardwareMap.get(DcMotor.class, "elbow");
+elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+elbow.setDirection(DcMotor.Direction.REVERSE);
+elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+//Servos
+intake = hardwareMap.get(Servo.class, "intake");
+wrist = hardwareMap.get(Servo.class, "wrist");
+
+
+waitForStart();
+    
+    
+specimenHang();
+specimenPickup();
+
+}
+
+
+private void specimenHang () {
+SpecimenArmOut(1);
+backDrive (20, 400);
+SpecimenShoulderIn(0.4);
+SpecimenArmIn (1);
+}
+
+private void specimenPickup () {
+turnRight(19,500);
+SampleOut(0.6);
+intakeSample(0.7);
+sleep(500);
+SpecimenArmIn (1.0);
+turnLeft(19,500);
+rightDrive(25,500);
+SpecimenArmOut(1);
+backDrive(14,250);
+SpecimenShoulderIn(0.4);
+SpecimenArmIn (1);
+
+}
+
+
+ private void settingTarget (int fL_inches, int fR_inches, int bL_inches, int bR_inches) {
+
+    double ticksPerInch = 29.8497937569;
+    
+    int fL_target = (int)(ticksPerInch * fL_inches);
+    int fR_target = (int)(ticksPerInch * fR_inches);
+    int bR_target = (int)(ticksPerInch * bR_inches);
+    int bL_target =  (int)(ticksPerInch * bL_inches);
+
+        fL.setTargetPosition(fL_pos + fL_target);
+        fR.setTargetPosition(fR_pos + fR_target);
+        bL.setTargetPosition(bL_pos + bL_target);
+        bR.setTargetPosition(bR_pos + bR_target);
+
+        // Update the positions for the next move
+        fL_pos += fL_target;
+        fR_pos += fR_target;
+        bL_pos += bL_target;
+        bR_pos += bR_target;
+
+        // Set motor modes to RUN_TO_POSITION
+        fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    
+     private void settingVelocity (double velocity) {
+        fL.setVelocity(velocity);
+        fR.setVelocity(velocity);
+        bL.setVelocity(velocity);
+        bR.setVelocity(velocity);
+
+        // Wait for motors to reach the target positions
+        while (opModeIsActive() && (fL.isBusy() || fR.isBusy() || bL.isBusy() || bR.isBusy())) {
+            // You can add telemetry here if needed to monitor progress
+        }
+
+        // Stop motors once target is reached
+        fL.setPower(0);
+        fR.setPower(0);
+        bL.setPower(0);
+        bR.setPower(0);
+    }
+    
+     private void forwardDrive(int inches, double velocity) {
+       settingTarget(inches, inches, inches, inches);
+        settingVelocity (velocity);
+    }
+
+  private void rightDrive(int inches, double velocity) {
+       settingTarget(inches, -inches, -inches, inches);
+        settingVelocity (velocity);
+    }
+
+  private void leftDrive(int inches, double velocity) {
+       settingTarget(-inches, inches, inches, -inches);
+        settingVelocity (velocity);
+    }
+
+  private void backDrive(int inches, double velocity) {
+       settingTarget(-inches, -inches, -inches, -inches);
+        settingVelocity (velocity);
+    }
+    
+     private void turnRight (int inches, double velocity) {
+       settingTarget(inches, -inches, inches, -inches);
+        settingVelocity (velocity);
+    }
+    
+      private void turnLeft (int inches, double velocity) {
+       settingTarget(-inches, inches, -inches, inches);
+        settingVelocity (velocity);
+    }
+    
+    private void SpecimenArmOut (double armSpeed) {
+        
+        int shoulderTarget = (520);
+          shoulder.setTargetPosition(shoulderTarget);
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            shoulder.setPower(armSpeed);
+
+         wrist.setPosition(0.45);
+
+        int elbowTarget = (1520);
+         elbow.setTargetPosition(elbowTarget);
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           elbow.setPower(armSpeed);
+           
+         intake.setPosition(0);
+}
+
+private void SpecimenShoulderIn (double armSpeed) {
+          
+            intake.setPosition(0.5);
+
+        int shoulderTarget = (270);
+          shoulder.setTargetPosition(270);
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             shoulder.setPower(armSpeed);
+             SpecimenArmIn(1);
+}
+
+private void SpecimenArmIn (double armSpeed) {
+          
+    forwardDrive(8,600);
+  
+         elbow.setTargetPosition(10);
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           elbow.setPower(armSpeed);
+
+        int shoulderTarget2 = (10);
+          shoulder.setTargetPosition(shoulderTarget2);
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             shoulder.setPower(armSpeed);
+            
+}
+
+private void SampleOut(double armSpeed) {
+          
+         elbow.setTargetPosition(1860);
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           elbow.setPower(armSpeed);
+           
+          shoulder.setTargetPosition(230);
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+             shoulder.setPower(armSpeed);
+          
+          intake.setPosition(0);   
+          wrist.setPosition(0.17);
+             
+         backDrive(26,300);
+         
+         
+}
+
+private void intakeSample(double armSpeed) {
+    
+          elbow.setTargetPosition(2050);
+           elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           elbow.setPower(armSpeed);
+           
+}
+
+
+
+}

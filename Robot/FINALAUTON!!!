@@ -34,8 +34,8 @@ public class LowBasket extends LinearOpMode {
   Servo wrist;
 
 //Wrist Positions
-    double SpecimenPos = 0.4;
-    double IntakePos = 0.4;
+    double wristPos = 0;
+    //0.4
 
 @Override 
     public void runOpMode () {
@@ -83,23 +83,20 @@ wrist = hardwareMap.get(Servo.class, "wrist");
 waitForStart();
     
   
-firstSpecimen();
+lowBasket();
 
 }
 
 
-private void firstSpecimen () {
-backDrive (3, 320);
-specArmOut (1);
+private void lowBasket () {
+backDrive (8, 320);
+basketArm (1);
 sleep(2000);
 intake.setPosition(1);
-forwardDrive(10,700);
-specArmIn (0.4);
+forwardDrive(5,700);
+ArmIn(0.4);
 forwardDrive(70,700);
 }
-
-
-
 
 
  private void settingTarget (int fL_inches, int fR_inches, int bL_inches, int bR_inches) {
@@ -194,7 +191,7 @@ forwardDrive(70,700);
      private void turnRight (int inches, double velocity) {
        settingTarget(inches, -inches, inches, -inches);
         settingVelocity (velocity);
-        wrist.setPosition(IntakePos);
+        wrist.setPosition(wristPos);
     }
 
   private void turnLeft (int inches, double velocity) {
@@ -207,28 +204,27 @@ forwardDrive(70,700);
        settingTarget(-inches, inches, inches, 0);
         settingVelocity (velocity);
     }
-//326 795
-    
-    private void specArmOut (double armSpeed) {
-       // backDrive (4, 400);
-          
-        int shoulderTarget = (650);
+
+    private void basketArm (double armSpeed) {
+
+        int shoulderTarget = (700);
+        //660
           shoulder.setTargetPosition(shoulderTarget);
             shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             shoulder.setPower(armSpeed);
 
-         wrist.setPosition(SpecimenPos);
+         wrist.setPosition(wristPos);
 
         int elbowTarget = (1800);
-        //750
          elbow.setTargetPosition(elbowTarget);
            elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
            elbow.setPower(armSpeed);
            
 }
 
-private void specArmIn (double armSpeed) {             
+private void ArmIn (double armSpeed) {             
     forwardDrive(6,600);
+    wrist.setPosition(0.4);
   
          elbow.setTargetPosition(10);
            elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
